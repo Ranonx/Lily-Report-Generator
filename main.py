@@ -20,8 +20,9 @@ def main(pdf_folder, output_path):
     img5 = os.path.join(img_folder, "good2.png")
     img6 = extract_page_4d(pdf_file, 1, crop=(0.27, 0.50, 0.65, 0.99), output_path=os.path.join(img_folder, "img6.png"))
     img7 = os.path.join(img_folder, "table.png")
+    img8 = os.path.join(img_folder, "table2.png")
 
-    create_word_template_with_image(output_path, [img1, img2, img3, img4, img5, img6,img7])
+    create_word_template_with_image(output_path, [img1, img2, img3, img4, img5, img6,img7,img8])
     print('Word template created successfully.')
 
 if __name__ == '__main__':
