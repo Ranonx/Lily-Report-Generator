@@ -4,6 +4,17 @@ from utils_functions.create_table import create_table, add_table_row
 from utils_functions.create_image import create_image
 from doc_template import add_image_with_title
 
+def add_formatted_content(doc, filename):
+    with open(filename, "r", encoding="utf-8") as f:
+        content_lines = f.readlines()
+
+    for line in content_lines:
+        line = line.strip()
+        if line.startswith("-"):
+            paragraph = doc.add_paragraph(line[1:].strip(), style="ListBullet")
+        else:
+            create_title(doc, line, 3)
+
 def create_word_template_with_image(output_path, img_paths):
     doc = docx.Document()
 
@@ -38,10 +49,6 @@ def create_word_template_with_image(output_path, img_paths):
 
     create_title(doc, "足弓发育四个阶段", 2)
     create_image(doc, img_paths[7], 6)
-    with open("effect.txt", "r", encoding="utf-8") as f:
-        effect_text = f.read()
-    doc.add_paragraph(effect_text)
-
-
+    add_formatted_content(doc, "content_text.txt")
 
     doc.save(output_path)
