@@ -3,6 +3,7 @@ from utils_functions.create_title import create_title
 from utils_functions.create_table import create_table, add_table_row
 from utils_functions.create_image import create_image
 from doc_template import add_image_with_title
+from pdf_utils import extract_name_and_gender_from_pdf
 
 def add_formatted_content(doc, filename):
     with open(filename, "r", encoding="utf-8") as f:
@@ -15,12 +16,16 @@ def add_formatted_content(doc, filename):
         else:
             create_title(doc, line, 3)
 
-def create_word_template_with_image(output_path, img_paths):
+def create_word_template_with_image(output_path, img_paths, pdf_path):
     doc = docx.Document()
 
     create_title(doc, "足踝检测评估报告", 1)
+
+    # Extract name and gender from PDF file
+    name, gender = extract_name_and_gender_from_pdf(pdf_path)
+
     table = create_table(doc, 0, 3)
-    add_table_row(table, ["姓名：\t", "年龄：\t", "性别："])
+    add_table_row(table, [f"姓名：{name}\t", "年龄：\t", f"性别：{gender}"])
 
     create_image(doc, img_paths[0], 6)
     doc.add_page_break()
@@ -40,7 +45,7 @@ def create_word_template_with_image(output_path, img_paths):
     add_image_with_title(doc, img_paths[5], "实际后跟内外翻情况", compare_table2.cell(0, 1))
 
     create_title(doc, "初步诊断：", 2)
-    with open("diagnosis_text.txt", "r", encoding="utf-8") as f:
+    with open("template/diagnosis_text.txt", "r", encoding="utf-8") as f:
         diagnosis_text = f.read()
     doc.add_paragraph(diagnosis_text)
     create_image(doc, img_paths[6], 6)
@@ -49,6 +54,6 @@ def create_word_template_with_image(output_path, img_paths):
 
     create_title(doc, "足弓发育四个阶段", 2)
     create_image(doc, img_paths[7], 6)
-    add_formatted_content(doc, "content_text.txt")
+    add_formatted_content(doc, "template/content_text.txt")
 
     doc.save(output_path)

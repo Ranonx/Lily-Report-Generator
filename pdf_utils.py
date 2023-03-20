@@ -1,5 +1,7 @@
 import os
 import fitz  # PyMuPDF
+import PyPDF2
+import re
 
 def get_pdf_file(pdf_folder):
     for file in os.listdir(pdf_folder):
@@ -33,3 +35,20 @@ def extract_page_4d(pdf_path, page_number, zoom=2, crop=(0, 1, 0, 1), output_pat
     pix.save(output_image)
 
     return output_image
+
+def extract_name_and_gender_from_pdf(pdf_path):
+    with open(pdf_path, 'rb') as pdf_file:
+        pdf_reader = PyPDF2.PdfReader(pdf_file)
+        page = pdf_reader.pages[0]
+        content = page.extract_text()
+
+        # Extract name and gender
+        pattern = r"(\d{3}\s+)([\u4e00-\u9fa5]+)\s+(男|女)"
+        match = re.search(pattern, content)
+
+        if match:
+            name = match.group(2)
+            gender = match.group(3)
+            return (name, gender)
+        else:
+            return None
